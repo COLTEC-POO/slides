@@ -1,0 +1,281 @@
+/**
+ * White theme for reveal.js. This is the opposite of the 'black' theme.
+ *
+ * By Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+// Include theme-specific fonts
+@import "../template/fonts";
+
+// Override theme settings (see ../template/settings.scss)
+$backgroundColor: #fff;
+
+$mainColor: #222;
+$headingColor: #222;
+
+$mainFontSize: 42px;
+$mainFont: 'Josefin Slab', serif;
+$headingFont: 'Fredericka the Great', cursive;
+$headingTextShadow: none;
+$headingLetterSpacing: normal;
+$headingTextTransform: uppercase;
+$headingFontWeight: 300;
+$linkColor: #2a76dd;
+$linkColorHover: lighten( $linkColor, 15% );
+$selectionBackgroundColor: lighten( $linkColor, 25% );
+
+$heading1Size: 2.5em;
+$heading2Size: 1.6em;
+$heading3Size: 1.3em;
+$heading4Size: 1.0em;
+
+section.darkBackground {
+	&, h1, h2, h3, h4, h5, h6 {
+		color: #fff;
+	}
+}
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
+
+
+/***********************************************
+ * Background effects
+ ***********************************************/
+
+.backgrounds {
+    html.blur & {
+        filter: blur(4px) saturate(.7) brightness(.8);
+    }
+
+    html.dark & {
+        filter: brightness(.6);
+    }
+
+    html.watermark & {
+        filter: opacity(.15);
+    }
+}
+
+/***********************************************
+ * Title slide
+ ***********************************************/
+
+@keyframes slidein {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+        width: 150%;
+    }
+
+    60% {
+        transform: translateX(-15%);
+        opacity: 1;
+    }
+
+    75% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    100% {
+        width: inherit;
+        opacity: 1;
+    }
+}
+
+section.title {
+    text-align: left;
+    background-color:  rgba(0, 0, 0, 0.6);
+    color: $backgroundColor;
+    padding: 7% !important;
+
+    h1 {
+        font-family: $headingFont;
+        color: $backgroundColor;
+    }
+
+    h2, h3, address {
+        font-weight: 200;
+        font-family: $mainFont;
+        color: $backgroundColor;
+    }
+
+    &.animated {
+        opacity: 0 !important;
+        &.present {
+            animation: slidein cubic-bezier(1.000, -0.530, 0.405, 1.425);
+            animation-duration: 3s;
+            animation-fill-mode: forwards;
+        }
+    }
+}
+
+
+/***********************************************
+ * Headers & Footers
+ ***********************************************/
+
+ div.reveal > footer {
+    position: absolute;
+    font-size: 0.35em;
+    font-weight: 300;
+    font-family: $mainFont;
+    bottom: 1em;
+
+    &.center {
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    &.left {
+        left: 1em;
+    }
+
+    &.right {
+        right: 1em;
+    }
+ }
+
+
+ div.reveal > header {
+    position: absolute;
+    font-size: 0.35em;
+    font-weight: 300;
+    font-family: $mainFont;
+    top: 1em;
+
+    &.center {
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    &.left {
+        left: 1em;
+    }
+
+    &.right {
+        right: 1em;
+    }
+ }
+
+/***********************************************
+ * Shout
+ ***********************************************/
+
+h1.shout {
+   font-size: 4em !important;
+   font-weight: 200 !important;
+}
+ 
+
+/***********************************************
+ * Quoting
+ ***********************************************/
+
+ .reveal blockquote {
+    // position: relative;
+    margin: 5% auto;
+    width: 70%;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-weight: 200;
+    padding-left: 1em;
+    border-left: 25px solid rgba(0, 0, 0, 0.6);
+    box-shadow: none;
+
+    & > footer {
+        display: block;
+        text-align: right;
+        font-size: 0.6em;
+        line-height: 2em;
+        color: rgba(0, 0, 0, 0.6);
+
+        &:before {
+            content: '\2015 ';
+        }
+    }
+  }
+  
+
+  /***********************************************
+ * coding
+ ***********************************************/
+ pre {
+    &[data-file]::before {
+        content: attr(data-file);
+        position: absolute;
+        bottom: 0em;
+        right: 0em;
+        font-size: 1.5em;
+        font-family: $headingFont;
+        color: $linkColorHover;
+        padding: 0.3em;
+    }
+ }
+
+/***********************************************
+ * listings
+ ***********************************************/
+
+ ul {
+     li {
+         margin-bottom: 0.5em !important;
+     }
+ }
+
+ /***********************************************
+ * reference slide
+ ***********************************************/
+ 
+section.reference {
+    margin-left: 3%;
+    ul {
+        float: left;
+    }
+    h2, p {
+        text-align: left;
+    }
+}
+
+/***********************************************
+ * post it
+ ***********************************************/
+ 
+ .card {
+    background-color: #fff2a8;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    padding: 1em !important;
+    display: inline;
+}
+
+/***********************************************
+ * color effects for cards and code
+ ***********************************************/
+
+ code mark, .card {
+    &.yellow {
+        background-color: #fff2a8;
+    }
+
+    &.blue {
+        background-color: #a8d1ff;
+    }
+
+    &.green {
+        background-color: #B7FFCB;
+    }
+
+    &.red {
+        background-color: #ffb7b7;
+    }
+}
