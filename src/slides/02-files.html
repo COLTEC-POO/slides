@@ -1,0 +1,168 @@
+<section class="title" data-background="img/coltec.png" data-state="blur">
+    <h3>COLTEC/UFMG</h3>
+    <h1>Armazenamento Externo &amp; Serialização</h1>
+    <h3>João Eduardo Montandon</h3>
+</section>
+
+<section>
+    <h1>Obj = dados + ações</h1>
+</section>
+
+<section>
+    <h2>Dados X Ações</h2>
+    <table>
+        <tr>
+            <td><b>Dados</b></td>
+            <td><b>Ações</b></td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>Representadas por <b>atributos</b></li>
+                    <li>Contém informações concretas do objeto</li>
+                    <li><b>Valores específicos por instância</b></li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Representadas por <b>métodos</b></li>
+                    <li>Contém instruções a serem executadas para <b>todos</b> objetos daquela classe</li>
+                    <li><b>"Valores" específicos por classe</b></li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</section>
+
+<section>
+    <h2>Persistência de dados e ações</h2>
+    <p>As ações já estão "persistidas" na codificação dos métodos.</p>
+    <p><b>Como persistir os dados?</b></p>
+</section>
+
+<section>
+    <h2>Persistência de dados</h2>
+    <ol>
+        <li>Textual</li>
+        <li>Serialização</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Persistência Textual</h1>
+</section>
+
+<section>
+    <h2>Persistência Textual</h2>
+    <ul>
+        <li>Forma mais simples e tradicional de persistência de dados</li>
+        <li>Converte-se manualmente objetos em formato textual, e os salva em arquivo</li>
+        <li>Exemplos: <code>.csv</code>, <code>.txt</code>, <code>.xml</code>, <code>.json</code>, etc.</li>
+    </ul>
+</section>
+
+<section>
+    <pre data-file="characters.csv" style="max-width: 60%;"><code data-trim data-noescape class="csv" style="font-size: 2rem; max-height: 100%;">
+        power,type,weapons        
+        50,Elf,bow,sword,dust 
+        200,Troll,bare hands,big ax
+        120,Magician,spells,invisibility
+    </code></pre>
+</section>
+
+<section>
+    <h2>Persistência Textual</h2>
+    <img data-src="../img/02-files/obj-to-file.png" alt="" style="width: 70%;">
+</section>
+
+<section>
+    <h2>IO &amp; Streams API</h2>
+    <img data-src="../img/02-files/streams-example.svg" alt="" style="width: 70%;">
+    <ul>
+        <li>Em Java, utilizamos <i>streams</i> para enviar dados para fontes externas ao programa.</li>
+        <li>Um arquivo é uma fonte externa, portanto utiliza-se streams para sua manipulação</li>
+        <li>Streams podem ser classificados em:</li>
+        <ul>
+            <li><b>Connection streams:</b> utilizados para efetivo envio/recebimento do dado a partir da fonte externa selecionada</li>
+            <li><b>Chaining streams: </b> utilizados para converter sucessivamente o dado obtido inicialmente no formato desejado</li>
+        </ul>
+    </ul>
+</section>
+
+<section>
+    <h2>Exemplo: Escrita</h2>
+    <img data-src="../img/02-files/file-writer-pipeline.png" alt="" style="width: 60%;">
+    <pre data-file="Main.java"><code data-trim data-noescape class="java" style="max-height: 100%;">
+        public class Main {
+            public static void main(String[] args) {
+                try {
+                    File arquivo = new File("file.txt");
+                    FileWriter fWriter = new FileWriter(arquivo);
+                    BufferedWriter bWriter = new BufferedWriter(fWriter);
+
+                    bWriter.writeLine("Boulder");
+                    bWriter.writeLine("Aspen");
+                    bWriter.writeLine("Denver");
+
+                    writer.close();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    </code></pre>
+</section>
+
+<section>
+    <h2>Exemplo: Leitura</h2>
+    <pre data-file="Main.java"><code data-trim data-noescape class="java" style="max-height: 100%;">
+            public class Main {
+                public static void main(String[] args) {
+                    try {
+                        File arquivo = new File("file.txt");
+                        FileReader fReader = new FileReader(arquivo);
+                        BufferedReader bReader = new BufferedReader(fReader);
+    
+                        String line = null;
+                        while ((<mark>line = bReader.readLine()</mark>) != null) {
+                            System.out.println(line);
+                        }
+    
+                        bReader.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        </code></pre>
+</section>
+
+<section>
+    <h2>Vale a pena?</h2>
+    <table>
+        <tr>
+            <td><b>Vantagens</b></td>
+            <td><b>Desvantagens</b></td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>Leitura/Escrita transparentes para usuário</li>
+                    <li>Portabilidade: pode ser acessado por outros programas</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Error-prone</li>
+                    <li>API é complicada de se utilizar</li>
+                    <li>Leitura/escrita de dados estruturados pode ser complexo</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+</section>
+
+<section>
+    <h1>Serialização</h1>
+</section>
