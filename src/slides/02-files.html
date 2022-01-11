@@ -41,6 +41,22 @@
 </section>
 
 <section>
+    <h2>Java I/O API</h2>
+    <img data-src="../img/02-files/streams-example.svg" alt="" style="width: 70%;">
+    <ul>
+        <li>Em Java, utilizamos  fluxos de dados (<i>streams</i>) para enviar dados para fontes externas ao programa.</li>
+        <li>Um arquivo é uma fonte externa, portanto utiliza-se streams para sua manipulação</li>
+        <li>Streams podem ser classificados em:</li>
+        <ul>
+            <li><b>Connection streams:</b> utilizados para efetivo envio/recebimento do dado a partir da fonte externa
+                selecionada</li>
+            <li><b>Chaining streams: </b> utilizados para converter sucessivamente o dado obtido inicialmente no formato
+                desejado</li>
+        </ul>
+    </ul>
+</section>
+
+<section>
     <h2>Persistência de dados</h2>
     <ol>
         <li>Textual</li>
@@ -62,31 +78,8 @@
 </section>
 
 <section>
-    <pre data-file="characters.csv" style="max-width: 60%;"><code data-trim data-noescape class="csv" style="font-size: 2rem; max-height: 100%;">
-        power,type,weapons        
-        50,Elf,bow,sword,dust 
-        200,Troll,bare hands,big ax
-        120,Magician,spells,invisibility
-    </code></pre>
-</section>
-
-<section>
     <h2>Persistência Textual</h2>
     <img data-src="../img/02-files/obj-to-file.png" alt="" style="width: 70%;">
-</section>
-
-<section>
-    <h2>IO &amp; Streams API</h2>
-    <img data-src="../img/02-files/streams-example.svg" alt="" style="width: 70%;">
-    <ul>
-        <li>Em Java, utilizamos <i>streams</i> para enviar dados para fontes externas ao programa.</li>
-        <li>Um arquivo é uma fonte externa, portanto utiliza-se streams para sua manipulação</li>
-        <li>Streams podem ser classificados em:</li>
-        <ul>
-            <li><b>Connection streams:</b> utilizados para efetivo envio/recebimento do dado a partir da fonte externa selecionada</li>
-            <li><b>Chaining streams: </b> utilizados para converter sucessivamente o dado obtido inicialmente no formato desejado</li>
-        </ul>
-    </ul>
 </section>
 
 <section>
@@ -160,9 +153,204 @@
             </td>
         </tr>
     </table>
-
 </section>
 
 <section>
     <h1>Serialização</h1>
+</section>
+
+<section>
+    <h2>Serialização</h2>
+    <ul>
+        <li>Delega para a JVM o procedimento de empacotamento/desempacotamento de objetos</li>
+        <li>Cabe a linguagem tratar <b>como</b> os atributos dos objetos serão salvos</li>
+        <li>Cabe ao programador definir <b>quais</b> classes e atributos poderão ser persistidos</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Serialização</h2>
+    <img data-src="../img/02-files/serialization-write-pipeline.png" alt="">
+</section>
+
+<section>
+    <h2>Serialização: Exemplo</h2>
+    <pre><code data-noescape data-trim class="java">
+        Conta c1 = new Conta();
+        Conta c2 = new Conta();
+        Conta c3 = new Conta();
+
+        // ...
+
+        FileOutputStream fStream = new FileOutputStream("contas.ser");
+        ObjectOutputStream oStream = new ObjectOutputStream(fStream);
+
+        <mark>oStream.writeObject(c1);</mark>
+        <mark>oStream.writeObject(c2);</mark>
+        <mark>oStream.writeObject(c3);</mark>
+
+        oStream.close();
+    </code></pre>
+    <div class="card red fragment" style="position: absolute; bottom: 0%; right: 0%; transform: rotate(-20deg);">
+        Qual a razão do erro?
+    </div>
+</section>
+
+<section>
+    <h2>Serialização</h2>
+    <p>
+        Os objetos de uma classe estão aptos a serem serializados se implementarem a interface <code>Serializable</code>:
+    </p>
+    <pre data-file="Conta.java"><code data-noescape data-trim class="java">
+        public class Conta <mark>implements Serializable</mark> {
+            private double saldo;
+            private int numConta;
+            private Cliente dono;
+            private static int numContas;
+
+            ....
+        }
+    </code></pre>
+    <div class="card red fragment" style="position: absolute; bottom: 7%; right: 20%; transform: rotate(15deg);">
+        Mas ainda não está funcionando...
+    </div>
+</section>
+
+<section>
+    <h2>Serialização é tudo ou nada...</h2>
+    <ul>
+        <li>Ao serializar um objeto, ele vai serializar <b>todos</b> os atributos daquela instância</li>
+        <li>E se o atributo for uma referência para outro objeto?</li>
+        <li>Este também precisa ser habilitado para serialização!!</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Serialização é tudo ou nada...</h2>
+    <pre data-file="Conta.java"><code data-noescape data-trim class="java">
+        public class Conta implements Serializable {
+            private double saldo;
+            private int numConta;
+            <mark class="green">private Cliente dono;</mark>
+            private static int numContas;
+
+            ....
+        }
+    </code></pre>
+    <pre data-file="Cliente.java"><code data-noescape data-trim class="java">
+        public class <mark class="green">Cliente implements Serializable</mark> {
+            private String nome;
+            private String endereco;
+            private String telefone;
+            private Date ultimoAcesso;
+
+            ....
+        }
+    </code></pre>
+    <pre data-file="Main.java"><code data-noescape data-trim class="java">
+            Conta c1 = new Conta();
+            Conta c2 = new Conta();
+            Conta c3 = new Conta();
+    
+            // ...
+    
+            FileOutputStream fStream = new FileOutputStream("contas.ser");
+            ObjectOutputStream oStream = new ObjectOutputStream(fStream);
+    
+            <mark class="green">oStream.writeObject(c1);</mark>
+            <mark class="green">oStream.writeObject(c2);</mark>
+            <mark class="green">oStream.writeObject(c3);</mark>
+    
+            oStream.close();
+        </code></pre>
+    <div class="card green" style="position: absolute; bottom: 20%; right: 20%; transform: rotate(-20deg);">
+        <b>Agora sim!</b>
+    </div>
+</section>
+
+<section>
+    <h2>O Modificador <code>transient</code></h2>
+    <p>Às vezes nós não queremos persistir um determinado atributo.</p>
+    <p>Neste caso, ele deve ser marcado como <code>transient</code>:</p>
+    <pre data-file="Cliente.java"><code data-noescape data-trim class="java">
+        public class Cliente implements Serializable {
+            private String nome;
+            private String endereco;
+            private String telefone;
+            transient private Date ultimoAcesso; // essa variável não será gravada nem recuperada!
+        }
+    </code></pre>
+</section>
+
+<section>
+    <h2>E as variáveis estáticas?</h2>
+    <p>Variáveis estáticas não pertencem ao objeto, mas sim a classe!</p>
+    <p>Portanto elas também são desconsideradas no procedimento de serialização.</p>
+
+    <pre data-file="Conta.java"><code data-noescape data-trim class="java">
+        public class Conta implements Serializable {
+            private double saldo;
+            private int numConta;
+            private Cliente dono;
+            private static int numContas; // não é considerada na serialização!
+
+            ....
+        }
+    </code></pre>
+</section>
+
+<section>
+    <h2>Deserialização</h2>
+    <img data-src="../img/02-files/serialization-read-pipeline.png" alt="">
+</section>
+
+<section>
+    <h2>Deserialização: Exemplo</h2>
+    <pre><code data-trim class="java">
+        FileInputStream fStream = new FileInputStream("contas.ser");
+        ObjectInputStream oStream = new ObjectInputStream(fstream);
+
+        Conta c1 = (Conta) oStream.readObject();
+        Conta c2 = (Conta) oStream.readObject();
+        Conta c3 = (Conta) oStream.readObject();
+
+        oStream.close();
+    </code></pre>
+    <div class="card" style="position: absolute; top: -70%; right: 0%; transform: rotate(15deg); max-width: 20%;">
+        Como restaurar o valor da variável estática <code>numContas</code>?
+    </div>
+</section>
+
+<section>
+    <h2>Vale a pena?</h2>
+    <table>
+        <tr>
+            <td><b>Vantagens</b></td>
+            <td><b>Desvantagens</b></td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>Simplicidade!</li>
+                    <li>Desenvolvedor se preocupa com o quê será salvo</li>
+                    <li>JVM se encarrega de como armazenar/recuperar os dados</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Flexibilidade!</li>
+                    <li>Não é possível fazer a leitura a partir de outros programas ou linguagens</li>
+                    <li></li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</section>
+
+<section  class="reference">
+    <h2>Referências</h2>
+    <ul>
+        <li>Heads First: Java, Cap 14: Saving Objects</li>
+        <li><a href="https://www.devmedia.com.br/use-a-serializacao-em-java-com-seguranca/29012">Use a Serialização em Java com Segurança</a>, DevMedia</li>
+    </ul>
 </section>
