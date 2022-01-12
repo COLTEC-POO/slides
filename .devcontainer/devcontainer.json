@@ -10,5 +10,6 @@
 	"settings": {
 		"terminal.integrated.shell.linux": null
 	},
-	"shutdownAction": "stopContainer"
+	"shutdownAction": "stopContainer",
+	"remoteUser": "root"
 }
